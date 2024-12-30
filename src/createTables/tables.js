@@ -41,15 +41,40 @@ const  createTables= async ()=> {
       );
     `);
 
-    // Create the 'user_posts' table with foreign key reference to 'users'
-    // await client.query(`
-    //   CREATE TABLE IF NOT EXISTS user_posts (
-    //     post_id SERIAL PRIMARY KEY,
-    //     user_id INT REFERENCES users(id) ON DELETE CASCADE,
-    //     post_content TEXT,
-    //     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-    //   );
-    // `);
+    // Create the 'createLab' table with foreign key reference to 'users'
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS createLab (
+        lab_id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+        user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+        type TEXT,
+        platform Text,
+        provider  VARCHAR(255),
+        cpu NUMERIC(5),
+        ram NUMERIC(5),
+        storage NUMERIC(5),
+        instance VARCHAR(255),
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      );
+    `);
+
+    //create table 'aws_ec2'  for storing in the database
+    await client.query(
+    `CREATE TABLE IF NOT EXISTS aws_ec2 (
+    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+    instance_name VARCHAR(255),
+    memory VARCHAR(50),
+    vcpu VARCHAR(50),
+    storage VARCHAR(50),
+    network_performance VARCHAR(50),
+    on_demand_windows_base_pricing VARCHAR(50),
+    on_demand_ubuntu_pro_base_pricing VARCHAR(50),
+    on_demand_suse_base_pricing VARCHAR(50),
+    on_demand_rhel_base_pricing VARCHAR(50),
+    on_demand_linux_base_pricing VARCHAR(50),
+    service VARCHAR(50)
+);
+`
+    )
 
     console.log("Tables created successfully!");
 

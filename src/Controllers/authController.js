@@ -24,6 +24,7 @@ const signupController = async(req,res)=>{
         const {name,email,password} = req.body;
         const query_instance = `INSERT INTO users (name,email,password) VALUES($1,$2,$3) RETURNING *`
         const HashedPassword = await hashPassword(password)
+        console.log('connecting')
         const result = await pool.query(query_instance,[name,email,HashedPassword])
         if(!result.rows[0]){
             return res.status(405).send({
