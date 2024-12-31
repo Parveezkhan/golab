@@ -87,8 +87,66 @@ const loginController = async (req,res)=>{
         })
     }
 }
+const getAllUsers = async (req,res)=>{
+    try{
+        const query_instance=`select * from users`;
+        const result = await pool.query(query_instance)
+
+        if(!result.rows){
+            return res.status(204).send({
+                success:false,
+                message:"No users are available",
+            })
+        }
+        return res.status(200).send({
+            success:true,
+            message:"Successfully accessed users",
+            data:result.rows
+        })
+    }
+    catch(error){
+        return res.status(500).send({
+            success:false,
+            message:"Could not access the users",
+            error
+        })
+    }
+}
+const addUser = async (req,res)=>{
+    try{
+        const {name,email,role,organization}=req.body.formData;
+        const {id}= req.body.user;
+        const password='123';
+        const HashedPassword = await hashPassword(password)
+        const query_instance =`INSERT INTO users (name,email,password,role,organization,created_by) VALUES($1,$2,$3,$4,$5,$6) RETURNING *`;
+        const result = await pool.query(query_instance,[name,email,HashedPassword,role,organization,id])
+        console.log(result)
+        if(!result.rows[0]){
+            return res.status(204).send({
+                success:false,
+                message:"could not add user",
+            })
+        }
+        return res.status(200).send({
+            success:true,
+            message:"Successfully added user",
+            data:result.rows[0],
+        })
+    }
+    catch(error){
+        return res.status(500).send({
+            success:false,
+            message:"Could not add the user",
+            error:error.message,
+            detail:error.detail,
+        })
+    }
+}
+
 
 module.exports={
     signupController,
     loginController,
+    getAllUsers,
+    addUser,
 }

@@ -36,8 +36,16 @@ const  createTables= async ()=> {
         name VARCHAR(50) NOT NULL,
         email VARCHAR(50) UNIQUE NOT NULL,
         password VARCHAR(255) NOT NULL,
+        organization VARCHAR(255),
         role VARCHAR(255) DEFAULT user,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        status VARCHAR(255),
+        created_by UUID ,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        lastActive TIMESTAMP,
+         FOREIGN KEY (created_by) 
+    REFERENCES users(id)
+    ON DELETE SET NULL 
+    ON UPDATE CASCADE
       );
     `);
 
